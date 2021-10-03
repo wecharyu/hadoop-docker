@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <!--
+    Configuration for resourcemanager and nodemanager
+  -->
+  <property>
+    <name>yarn.log-aggregation-enable</name>
+    <value>true</value>
+  </property>
+
+  <!--
+    Configuration for resourcemanager
+  -->
+  <!-- resource manager hosts -->
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>hadoop101</value>
+  </property>
+
+  <!-- list of permitted NodeManagers. -->
+  <property>
+    <name>yarn.resourcemanager.nodes.include-path</name>
+    <value>/opt/hadoop/etc/hadoop/workers</value>
+  </property>
+
+  <!-- mr shuffle -->
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>4096</value>
+  </property>
+</configuration>

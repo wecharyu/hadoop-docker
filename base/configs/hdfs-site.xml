@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+  <!--
+    Configurations for namenode
+  -->
+  <!-- hadoop name node path -->
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>file:/opt/hadoop/data/dfs/name</value>
+  </property>
+  <!-- list of permitted datanodes -->
+  <property>
+    <name>dfs.hosts</name>
+    <value>/opt/hadoop/etc/hadoop/workers</value>
+  </property>
+
+  <!--
+    Configurations for datanode
+  -->
+  <!-- hadoop data node path -->
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>file:/opt/hadoop/data/dfs/node</value>
+  </property>
+
+  <!-- name node web ui address -->
+  <property>
+    <name>dfs.namenode.http-address</name>
+    <value>hadoop100:9870</value>
+  </property>
+  <!-- 2nn web ui address -->
+  <property>
+    <name>dfs.namenode.secondary.http-address</name>
+    <value>hadoop102:9868</value>
+  </property>
+
+  <property>
+    <name>dfs.client.use.datanode.hostname</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>dfs.datanode.use.datanode.hostname</name>
+    <value>true</value>
+  </property>
+
+</configuration>

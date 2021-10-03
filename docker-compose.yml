@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  hadoop100:
+    image: wechar/hadoop-namenode
+    hostname: hadoop100
+    container_name: hadoop100
+    restart: always
+    ports:
+      - 9870:9870
+      - 9864:9864
+    environment:
+      - CLUSTER_NAME=test
+    tty: true
+    networks:
+      proxy:
+        ipv4_address: 172.16.0.100
+
+  hadoop101:
+    image: wechar/hadoop-resourcemanager
+    hostname: hadoop101
+    container_name: hadoop101
+    restart: always
+    ports:
+      - 8088:8088
+    environment:
+      - PREREQUISITE_SERVERS=hadoop100-9870:hadoop102-9868
+    tty: true
+    networks:
+      proxy:
+        ipv4_address: 172.16.0.101
+
+  hadoop102:
+    image: wechar/hadoop-secondarynamenode
+    hostname: hadoop102
+    container_name: hadoop102
+    restart: always
+    ports:
+      - 9868:9868
+    tty: true
+    networks:
+      proxy:
+        ipv4_address: 172.16.0.102
+
+networks:
+  proxy:
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1
