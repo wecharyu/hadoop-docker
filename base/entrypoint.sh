@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # all container start the sshd
-service ssh start
+sudo service ssh start
 
 # check for prerequisite servers
 function check_service()
 {
   local server=$1
   local retry_seconds=5
-  local max_try=20
+  local max_try=50
   let cur_try=1
 
   curl -s $server > /dev/null

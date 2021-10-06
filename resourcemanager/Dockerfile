@@ -7,4 +7,7 @@ EXPOSE 8088
 ADD run.sh /dockerentry/run.sh
 RUN chmod a+x /dockerentry/run.sh
 
+USER hadoop
+WORKDIR /home/hadoop
+
 CMD ["/dockerentry/run.sh"]

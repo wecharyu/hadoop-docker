@@ -9,6 +9,6 @@
   </property>
   <property>
     <name>hadoop.tmp.dir</name>
-    <value>/opt/hadoop/data</value>
+    <value>/usr/share/hadoop/data</value>
   </property>
 </configuration>

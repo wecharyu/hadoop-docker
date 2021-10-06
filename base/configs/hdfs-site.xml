@@ -8,12 +8,12 @@
   <!-- hadoop name node path -->
   <property>
     <name>dfs.namenode.name.dir</name>
-    <value>file:/opt/hadoop/data/dfs/name</value>
+    <value>file:/usr/share/hadoop/data/dfs/name</value>
   </property>
   <!-- list of permitted datanodes -->
   <property>
     <name>dfs.hosts</name>
-    <value>/opt/hadoop/etc/hadoop/workers</value>
+    <value>/usr/share/hadoop/etc/hadoop/workers</value>
   </property>
 
   <!--
@@ -22,7 +22,7 @@
   <!-- hadoop data node path -->
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>file:/opt/hadoop/data/dfs/node</value>
+    <value>file:/usr/share/hadoop/data/dfs/node</value>
   </property>
 
   <!-- name node web ui address -->

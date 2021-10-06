@@ -9,6 +9,9 @@ services:
     ports:
       - 9870:9870
       - 9864:9864
+    volumes:
+      - ./volumes/hadoop/data/hadoop100:/usr/share/hadoop/data
+      - ./volumes/hadoop/logs/hadoop100:/usr/share/hadoop/logs
     environment:
       - CLUSTER_NAME=test
     tty: true
@@ -23,6 +26,9 @@ services:
     restart: always
     ports:
       - 8088:8088
+    volumes:
+      - ./volumes/hadoop/data/hadoop101:/usr/share/hadoop/data
+      - ./volumes/hadoop/logs/hadoop101:/usr/share/hadoop/logs
     environment:
       - PREREQUISITE_SERVERS=hadoop100-9870:hadoop102-9868
     tty: true
@@ -37,6 +43,9 @@ services:
     restart: always
     ports:
       - 9868:9868
+    volumes:
+      - ./volumes/hadoop/data/hadoop102:/usr/share/hadoop/data
+      - ./volumes/hadoop/logs/hadoop102:/usr/share/hadoop/logs
     tty: true
     networks:
       proxy:

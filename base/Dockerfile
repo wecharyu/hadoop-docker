@@ -4,15 +4,14 @@ WORKDIR /root
 
 # install basic develop tools for contianer
 RUN apt-get -q update && apt-get -q install -y --no-install-recommends \
-      openssh-server rsync grsync curl gnupg \
-      openjdk-8-jdk \
+    openssh-server rsync grsync curl gnupg sudo \
+    openjdk-8-jdk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-
-# passwordless with ssh
-RUN ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa \
+# passwordless with sudo and ssh
+RUN echo "hadoop ALL=NOPASSWD: ALL" > "/etc/sudoers.d/hadoop-docker" \
+    && ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa \
     && cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
 # install hadoop
@@ -29,20 +28,9 @@ RUN curl -sSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
     && rm /tmp/hadoop.tar.gz*
 
-ENV HADOOP_HOME /opt/hadoop
-ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+ENV HADOOP_HOME /usr/share/hadoop
 
 RUN ln -s /opt/hadoop-$HADOOP_VERSION $HADOOP_HOME
-
-# get all encironment variables for ssh process
-RUN echo "export \$(cat /proc/1/environ | tr '\\\0' '\\\n' | xargs)" >> /etc/profile
-
-# the only user is root
-ENV HDFS_NAMENODE_USER root
-ENV HDFS_DATANODE_USER root
-ENV HDFS_SECONDARYNAMENODE_USER root
-ENV YARN_RESOURCEMANAGER_USER root
-ENV YARN_NODEMANAGER_USER root
 
 # config environment shell files
 RUN sed -i '/export JAVA_HOME/ s#.*#export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64#' $HADOOP_HOME/etc/hadoop/hadoop-env.sh
@@ -55,11 +43,23 @@ ADD configs/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml
 ADD configs/mapred-site.xml $HADOOP_HOME/etc/hadoop/mapred-site.xml
 ADD configs/workers $HADOOP_HOME/etc/hadoop/workers
 
-RUN mkdir $HADOOP_HOME/logs
-# data node path for all containers
-RUN mkdir -p $HADOOP_HOME/data/dfs/node
+# hadoop logs and data node path for all containers
+RUN mkdir $HADOOP_HOME/logs \
+    && mkdir -p $HADOOP_HOME/data/dfs/node
 
-# VOLUME $HADOOP_HOME/data/dfs/node
+# environment variables for all users
+RUN echo "source ~/.bash_profile" >> ~/.bashrc \
+    && echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bash_profile \
+    && echo "export HADOOP_HOME=/usr/share/hadoop" >> ~/.bash_profile \
+    && echo "export PATH=\$HADOOP_HOME/bin:\$HADOOP_HOME/sbin:\$PATH" >> ~/.bash_profile
+
+# add user and group
+ARG UID=1000
+ARG GID=1000
+
+RUN groupadd --non-unique -g $GID hadoop \
+    && useradd -g $GID -u $UID -k /root -rm -s /bin/bash hadoop \
+    && chown -R hadoop:hadoop $HADOOP_HOME/
 
 ADD entrypoint.sh /dockerentry/entrypoint.sh
 RUN chmod a+x /dockerentry/entrypoint.sh

@@ -1,7 +1,11 @@
 #!/bin/bash
 
-namedir=`sed -n '/dfs.namenode.name.dir/{N;p}' $HADOOP_HOME/etc/hadoop/hdfs-site.xml | sed -r '2s#<value>(.*)</value>#\1#' | sed -n '2p'`
-# namedir="/opt/hadoop/data/dfs/name"
+namedir=$HADOOP_HOME/data/dfs/name
+
+if [ ! -d $namedir ]; then
+  echo "Name node directory not found, creating $namedir now..."
+  mkdir -p $namedir
+fi
 
 if [ -z "$CLUSTER_NAME" ]; then
   echo "Cluster name not specified"
