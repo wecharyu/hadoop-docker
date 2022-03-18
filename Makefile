@@ -1,13 +1,14 @@
 # Makefile for hadoop docler build
 
 build_flag := --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
-workers := $(shell cat ./base/configs/workers)
+workers := $(shell cat ./hadoop/configs/workers)
 
 build:
-	docker build $(build_flag) -t wechar/hadoop-base ./base
-	docker build $(build_flag) -t wechar/hadoop-namenode ./namenode
-	docker build $(build_flag) -t wechar/hadoop-resourcemanager ./resourcemanager
-	docker build $(build_flag) -t wechar/hadoop-secondarynamenode ./secondarynamenode
+	docker build $(build_flag) -t wechar/cluster-base ./base
+	docker build $(build_flag) -t wechar/hadoop-base ./hadoop
+	docker build $(build_flag) -t wechar/hadoop-namenode ./hadoop/namenode
+	docker build $(build_flag) -t wechar/hadoop-resourcemanager ./hadoop/resourcemanager
+	docker build $(build_flag) -t wechar/hadoop-secondarynamenode ./hadoop/secondarynamenode
 
 .PHONY: clean
 clean:
