@@ -5,17 +5,12 @@ workers := $(shell cat ./hadoop/configs/workers)
 
 build:
 	docker build $(build_flag) -t wechar/cluster-base ./base
-	docker build $(build_flag) -t wechar/hadoop-base ./hadoop
-	docker build $(build_flag) -t wechar/hadoop-namenode ./hadoop/namenode
-	docker build $(build_flag) -t wechar/hadoop-resourcemanager ./hadoop/resourcemanager
-	docker build $(build_flag) -t wechar/hadoop-secondarynamenode ./hadoop/secondarynamenode
+	docker build $(build_flag) -t wechar/hadoop ./hadoop
 
 .PHONY: clean
 clean:
-	docker image rm wechar/hadoop-secondarynamenode
-	docker image rm wechar/hadoop-resourcemanager
-	docker image rm wechar/hadoop-namenode
-	docker image rm wechar/hadoop-base
+	docker image rm wechar/hadoop
+	docker image rm wechar/cluster-base
 
 mkdir_volumes:
 	rm -rf ./volumes/hadoop

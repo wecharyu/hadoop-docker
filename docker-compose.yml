@@ -2,9 +2,10 @@ version: "3"
 
 services:
   hadoop100:
-    image: wechar/hadoop-namenode
+    image: wechar/hadoop
     hostname: hadoop100
     container_name: hadoop100
+    command: sh -c "/dockerentry/namenode-run.sh"
     restart: always
     ports:
       - 9870:9870
@@ -20,9 +21,10 @@ services:
         ipv4_address: 172.16.0.100
 
   hadoop101:
-    image: wechar/hadoop-resourcemanager
+    image: wechar/hadoop
     hostname: hadoop101
     container_name: hadoop101
+    command: sh -c "/dockerentry/resourcemanager-run.sh"
     restart: always
     ports:
       - 8088:8088
@@ -37,9 +39,10 @@ services:
         ipv4_address: 172.16.0.101
 
   hadoop102:
-    image: wechar/hadoop-secondarynamenode
+    image: wechar/hadoop
     hostname: hadoop102
     container_name: hadoop102
+    command: sh -c "/dockerentry/secondarynamenode-run.sh"
     restart: always
     ports:
       - 9868:9868

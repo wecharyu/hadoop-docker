@@ -49,3 +49,14 @@ ARG GID=1000
 RUN groupadd --non-unique -g $GID hadoop \
     && useradd -g $GID -u $UID -k /root -rm -s /bin/bash hadoop \
     && chown -R hadoop:hadoop $HADOOP_HOME/
+
+# start script
+ADD namenode-run.sh /dockerentry/namenode-run.sh
+RUN chown hadoop /dockerentry/namenode-run.sh
+ADD resourcemanager-run.sh /dockerentry/resourcemanager-run.sh
+RUN chown hadoop /dockerentry/resourcemanager-run.sh
+ADD secondarynamenode-run.sh /dockerentry/secondarynamenode-run.sh
+RUN chown hadoop /dockerentry/secondarynamenode-run.sh
+
+USER hadoop
+WORKDIR /home/hadoop
