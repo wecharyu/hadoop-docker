@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  hive:
+    image: wechar/hive
+    hostname: hive
+    container_name: hive
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      - PREREQUISITE_SERVERS=mysql-3306:hadoop101-8088
+    tty: true
+    networks:
+      proxy:
+        ipv4_address: 172.16.0.200

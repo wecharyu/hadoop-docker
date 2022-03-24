@@ -53,10 +53,3 @@ services:
     networks:
       proxy:
         ipv4_address: 172.16.0.102
-
-networks:
-  proxy:
-    ipam:
-      config:
-        - subnet: 172.16.0.0/24
-          gateway: 172.16.0.1

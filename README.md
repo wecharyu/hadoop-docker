@@ -1,15 +1,21 @@
 # Hadoop Docker
 
-Hadoop docker project is used to build and start up a hadoop cluster in some docker containers.
+Hadoop docker project is used to build and start up a big data cluster in some docker containers. It is a convenient tool to try and test the big data components. Currently the components we support includes:
+- [Apache Hadoop](https://hadoop.apache.org/)
+- [Apache Hive](https://hive.apache.org/)
+
 
 ## Overview
 ![hadoop cluster overview](hadoop-cluster.png)
 
-With 3 nodes hadoop cluster, hostname is `hadoop100`, `hadoop101`, `hadoop102`.
+The big data components are optional while starting up the cluster.
+- For the hadoop component, there are 3 nodes whose hostnames are `hadoop100`, `hadoop101` and `hadoop102`.
+- For the hive component, there are one node whose hostname is `hive`, and hive component depends on the `mysql` node.
 
 ## Prerequisite
 - docker, docker-compose
 - make
+- sed
 
 ## Usage
 
@@ -17,13 +23,14 @@ With 3 nodes hadoop cluster, hostname is `hadoop100`, `hadoop101`, `hadoop102`.
 ```
 git clone git@github.com:wecharyu/hadoop-docker.git
 cd hadoop-docker
-make build
+make build target=hadoop
 ```
+The `target` option is used to specify the component your cluster want, whose default value is `hadoop`, the optional value include `hadoop` and `hive`.
 
 ### 2. startup cluster
 - use the Makefile script:
 ```
-make run
+make run target=hadoop
 ```
 - restart existed containers
 ```
@@ -40,8 +47,9 @@ docker-compose stop
 ```
 ### 4. get into containers
 ```
-docker exec -it hadoop100 bash
+docker exec -u root -it hadoop100 bash
 ```
+You can use `su` command to switch to other user in this container, for example you can use `su hadoop` in hadoop container.
 
 ## Access web ui from host broswer
 

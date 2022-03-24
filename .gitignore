@@ -1,2 +1,3 @@
 .vscode
 volumes
+/docker-compose.yml
