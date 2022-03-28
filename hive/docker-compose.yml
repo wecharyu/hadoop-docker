@@ -2,9 +2,10 @@ version: "3"
 
 services:
   hive:
-    image: wechar/hive
+    image: wechar/cluster
     hostname: hive
     container_name: hive
+    user: hive
     restart: always
     ports:
       - 3306:3306

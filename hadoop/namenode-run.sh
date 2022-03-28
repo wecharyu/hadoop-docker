@@ -19,13 +19,4 @@ fi
 
 $HADOOP_HOME/sbin/start-dfs.sh
 
-# create /tmp directory on hdfs if not exists
-$HADOOP_HOME/bin/hadoop fs -test -d /tmp
-result=$?
-if [ $result -ne 0 ]; then
-  # should create hdfs for hive user
-  $HADOOP_HOME/bin/hadoop fs -mkdir /tmp
-  $HADOOP_HOME/bin/hadoop fs -chmod 777 /tmp
-fi
-
 bash

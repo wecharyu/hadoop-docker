@@ -46,9 +46,9 @@ RUN echo "export HADOOP_HOME=/usr/share/hadoop" >> ~/.bash_profile \
 ARG UID=1000
 ARG GID=1000
 
-RUN groupadd --non-unique -g $GID hadoop \
+RUN groupadd -g $GID hdfs \
     && useradd -g $GID -u $UID -k /root -rm -s /bin/bash hadoop \
-    && chown -R hadoop:hadoop $HADOOP_HOME/
+    && chown -R hadoop:hdfs $HADOOP_HOME/
 
 # start script
 ADD namenode-run.sh /dockerentry/namenode-run.sh
@@ -57,6 +57,3 @@ ADD resourcemanager-run.sh /dockerentry/resourcemanager-run.sh
 RUN chown hadoop /dockerentry/resourcemanager-run.sh
 ADD secondarynamenode-run.sh /dockerentry/secondarynamenode-run.sh
 RUN chown hadoop /dockerentry/secondarynamenode-run.sh
-
-USER hadoop
-WORKDIR /home/hadoop

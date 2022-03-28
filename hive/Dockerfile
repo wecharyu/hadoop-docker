@@ -44,9 +44,8 @@ RUN curl -SL "${MYSQL_CONNECTOR_URL}" -o /tmp/connector.tar.gz \
 ARG UID=1000
 ARG GID=1000
 
-RUN groupadd --non-unique -g $GID hive \
-    && useradd -g $GID -u $UID -k /root -rm -s /bin/bash hive \
-    && chown -R hive:hadoop $HIVE_HOME/
+RUN useradd -g $GID -u $UID -k /root -rm -s /bin/bash hive \
+    && chown -R hive:hdfs $HIVE_HOME/
 
 ADD run.sh /dockerentry/run.sh
 RUN chmod a+x /dockerentry/run.sh

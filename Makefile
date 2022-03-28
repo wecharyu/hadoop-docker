@@ -9,6 +9,8 @@ workers := $(shell cat ./hadoop/configs/workers)
 target ?= hadoop
 
 build: build_$(target)_images
+	if [[ "$(docker images -q wechar/cluster 2> /dev/null)" != "" ]]; then docker image rm wechar/cluster; fi
+	docker image tag wechar/$(target) wechar/cluster
 
 # build images for different targets
 build_hadoop_images:
