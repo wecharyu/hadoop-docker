@@ -1,7 +1,7 @@
 # Makefile for hadoop docler build
 
-uid = $(shell id -u)
-gid = $(shell id -g)
+uid := $(shell id -u)
+gid := $(uid)
 
 build_flag = --build-arg UID=$(uid) --build-arg GID=$(gid)
 workers := $(shell cat ./hadoop/configs/workers)
@@ -9,11 +9,11 @@ workers := $(shell cat ./hadoop/configs/workers)
 target ?= hadoop
 
 build: build_network build_$(target)_images
-	$(docker image rm wechar/cluster 2> /dev/null)
+	-docker image rm wechar/cluster
 	docker image tag wechar/$(target) wechar/cluster
 
 build_network:
-	$(docker network create hadoop-docker-bridge 2> /dev/null)
+	-docker network create hadoop-docker-bridge
 
 # build images for different targets
 build_hadoop_images:
@@ -58,7 +58,7 @@ run: down build mkdir_volumes_$(target) generate_compose_yml_$(target)
 	docker-compose up
 
 down:
-	if [ -f docker-compose.yml ]; then docker-compose down; fi;
+	-docker-compose down
 
 generate_compose_yml_hadoop:
 	cp -rf docker-compose-head.yml docker-compose.yml
