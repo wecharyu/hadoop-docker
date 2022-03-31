@@ -17,9 +17,6 @@ services:
     environment:
       - CLUSTER_NAME=test
     tty: true
-    networks:
-      proxy:
-        ipv4_address: 172.16.0.100
 
   hadoop101:
     image: wechar/cluster
@@ -36,9 +33,6 @@ services:
     environment:
       - PREREQUISITE_SERVERS=hadoop100-9870:hadoop102-9868
     tty: true
-    networks:
-      proxy:
-        ipv4_address: 172.16.0.101
 
   hadoop102:
     image: wechar/cluster
@@ -53,6 +47,3 @@ services:
       - ./volumes/hadoop/data/hadoop102:/usr/share/hadoop/data
       - ./volumes/hadoop/logs/hadoop102:/usr/share/hadoop/logs
     tty: true
-    networks:
-      proxy:
-        ipv4_address: 172.16.0.102

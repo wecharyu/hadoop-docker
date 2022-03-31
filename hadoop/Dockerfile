@@ -6,14 +6,14 @@ WORKDIR /root
 RUN echo "hadoop ALL=NOPASSWD: ALL" > "/etc/sudoers.d/hadoop-docker"
 
 # install hadoop
-RUN curl -sSL https://dist.apache.org/repos/dist/release/hadoop/common/KEYS -o /tmp/KEYS \
+RUN curl -SL https://dist.apache.org/repos/dist/release/hadoop/common/KEYS -o /tmp/KEYS \
     && gpg --import /tmp/KEYS \
     && rm -rf /tmp/KEYS
 
 ARG HADOOP_VERSION="3.3.1"
 ARG HADOOP_URL="https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz"
 
-RUN curl -sSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
+RUN curl -SL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
     && curl -sSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc \
     && gpg --verify /tmp/hadoop.tar.gz.asc \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \

@@ -12,6 +12,3 @@ services:
     environment:
       - PREREQUISITE_SERVERS=mysql-3306:hadoop101-8088
     tty: true
-    networks:
-      proxy:
-        ipv4_address: 172.16.0.200
