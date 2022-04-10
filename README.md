@@ -16,6 +16,7 @@ The big data components are optional while starting up the cluster.
 - docker, docker-compose
 - make
 - sed
+- curl
 
 ## Usage
 
@@ -36,6 +37,7 @@ make run target=hadoop
 ```
 docker-compose start
 ```
+You can easily change the component version for your requirements in the `Makefile` file. Further more, if you want to test the non-community release version, i.e. components modified and compiled by yourself, you can place your compiled tarball in `packages` directory, **do not forget to keep the version number same as configuration in `Makefile`**.
 ### 3. stop containers
 - remove containers when stopping:
 ```
