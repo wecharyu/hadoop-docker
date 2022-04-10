@@ -6,18 +6,11 @@ WORKDIR /root
 RUN echo "hadoop ALL=NOPASSWD: ALL" > "/etc/sudoers.d/hadoop-docker"
 
 # install hadoop
-RUN curl -SL https://dist.apache.org/repos/dist/release/hadoop/common/KEYS -o /tmp/KEYS \
-    && gpg --import /tmp/KEYS \
-    && rm -rf /tmp/KEYS
-
 ARG HADOOP_VERSION="3.3.1"
-ARG HADOOP_URL="https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz"
 
-RUN curl -SL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
-    && curl -sSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc \
-    && gpg --verify /tmp/hadoop.tar.gz.asc \
-    && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
-    && rm /tmp/hadoop.tar.gz*
+COPY packages/hadoop-$HADOOP_VERSION.tar.gz /tmp/hadoop.tar.gz
+RUN tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
+    && rm /tmp/hadoop.tar.gz
 
 ENV HADOOP_HOME /usr/share/hadoop
 
@@ -28,11 +21,11 @@ RUN sed -i '/export JAVA_HOME/ s#.*#export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
 # RUN sed -i '$a export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' $HADOOP_HOME/etc/hadoop/yarn-env.sh
 
 # copy the config files
-ADD configs/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
-ADD configs/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
-ADD configs/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml
-ADD configs/mapred-site.xml $HADOOP_HOME/etc/hadoop/mapred-site.xml
-ADD configs/workers $HADOOP_HOME/etc/hadoop/workers
+ADD hadoop/configs/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
+ADD hadoop/configs/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+ADD hadoop/configs/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml
+ADD hadoop/configs/mapred-site.xml $HADOOP_HOME/etc/hadoop/mapred-site.xml
+ADD hadoop/configs/workers $HADOOP_HOME/etc/hadoop/workers
 
 # hadoop logs and data node path for all containers
 RUN mkdir $HADOOP_HOME/logs \
@@ -51,9 +44,9 @@ RUN groupadd -g $GID hdfs \
     && chown -R hadoop:hdfs $HADOOP_HOME/
 
 # start script
-ADD namenode-run.sh /dockerentry/namenode-run.sh
+ADD hadoop/namenode-run.sh /dockerentry/namenode-run.sh
 RUN chown hadoop /dockerentry/namenode-run.sh
-ADD resourcemanager-run.sh /dockerentry/resourcemanager-run.sh
+ADD hadoop/resourcemanager-run.sh /dockerentry/resourcemanager-run.sh
 RUN chown hadoop /dockerentry/resourcemanager-run.sh
-ADD secondarynamenode-run.sh /dockerentry/secondarynamenode-run.sh
+ADD hadoop/secondarynamenode-run.sh /dockerentry/secondarynamenode-run.sh
 RUN chown hadoop /dockerentry/secondarynamenode-run.sh
