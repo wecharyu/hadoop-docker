@@ -4,7 +4,7 @@ WORKDIR /root
 
 # install basic develop tools for contianer
 RUN apt-get -q update && apt-get -q install -y --no-install-recommends \
-    openssh-server rsync grsync curl gnupg sudo \
+    openssh-server rsync grsync curl gnupg sudo vim \
     openjdk-8-jdk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
