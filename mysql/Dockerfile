@@ -1,6 +1,6 @@
 FROM wechar/cluster-base AS base
 
-FROM mysql:5.7
+FROM mysql:5.7-debian
 
 # install basic develop tools for contianer
 RUN apt-get -q update && apt-get -q install -y --no-install-recommends \
