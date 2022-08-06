@@ -1,0 +1,42 @@
+FROM wechar/hadoop
+
+USER root
+WORKDIR /root
+
+# passwordless with sudo for spark user
+RUN echo "spark ALL=NOPASSWD: ALL" > "/etc/sudoers.d/spark-docker"
+
+# install spark
+ARG SPARK_VERSION="3.3.0"
+
+COPY packages/spark-${SPARK_VERSION}-bin-hadoop3.tgz /tmp/spark-bin-hadoop.tgz
+RUN tar -xvf /tmp/spark-bin-hadoop.tgz -C /opt/ \
+    && rm /tmp/spark-bin-hadoop.tgz
+
+ENV SPARK_HOME /usr/share/spark
+
+RUN ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop3 $SPARK_HOME
+
+ENV HADOOP_CONF_DIR /etc/hadoop-client
+
+RUN mkdir -p /etc/spark-conf
+ENV SPARK_CONF_DIR /etc/spark-conf
+
+# copy the config files
+ADD spark/configs/spark-conf $SPARK_CONF_DIR
+
+# environment variables for all users
+RUN echo "export SPARK_HOME=/usr/share/spark" >> ~/.bash_profile \
+    && echo "export PATH=\$SPARK_HOME/bin:\$PATH" >> ~/.bash_profile
+
+# add user and group
+ARG UID=1000
+ARG GID=1000
+
+RUN useradd -g $GID -u $UID -k /root -rm -s /bin/bash spark \
+    && chown -R spark:hdfs $SPARK_HOME/
+
+ADD spark/run.sh /dockerentry/run.sh
+RUN chmod a+x /dockerentry/run.sh
+
+CMD ["/dockerentry/run.sh"]

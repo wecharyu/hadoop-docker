@@ -1,12 +1,14 @@
 # Makefile for hadoop docler build
 
 # basic configuration
-hadoop_version := 3.3.1
+hadoop_version := 3.3.2
 hive_version := 3.1.2
+spark_version := 3.3.0
 
 # common url
 hadoop_url := https://www.apache.org/dist/hadoop/common/hadoop-$(hadoop_version)/hadoop-$(hadoop_version).tar.gz
 hive_url := https://downloads.apache.org/hive/hive-$(hive_version)/apache-hive-$(hive_version)-bin.tar.gz
+spark_url := https://dlcdn.apache.org/spark/spark-$(spark_version)/spark-$(spark_version)-bin-hadoop3.tgz
 
 uid := $(shell id -u)
 gid := $(uid)
@@ -17,8 +19,6 @@ workers := $(shell cat ./hadoop/configs/workers)
 target ?= hadoop
 
 build: build_network build_$(target)_images
-	-docker image rm wechar/cluster
-	docker image tag wechar/$(target) wechar/cluster
 
 build_network:
 	-docker network create hadoop-docker-bridge
@@ -36,6 +36,10 @@ build_hive_images: build_mysql_images download_hive_tarball
 	docker build $(build_flag) --build-arg HIVE_VERSION=$(hive_version) -t wechar/hive -f ./hive/Dockerfile .
 	$(eval uid=$(shell echo $$(($(uid)+1))))
 
+build_spark_images: build_hive_images download_spark_tarball
+	docker build $(build_flag) --build-arg SPARK_VERSION=$(spark_version) -t wechar/spark -f ./spark/Dockerfile .
+	$(eval uid=$(shell echo $$(($(uid)+1))))
+
 # download tarballs
 download_hadoop_tarball:
 	mkdir -p ./packages
@@ -45,19 +49,26 @@ download_hive_tarball:
 	mkdir -p ./packages
 	test -f ./packages/apache-hive-$(hive_version)-bin.tar.gz && echo "hive tarball already exists" || curl -SL "$(hive_url)" -o ./packages/apache-hive-$(hive_version)-bin.tar.gz
 
+download_spark_tarball:
+	mkdir -p ./packages
+	test -f ./packages/spark-$(spark_version)-bin-hadoop3.tgz && echo "spark tarball already exists" || curl -SL "$(spark_url)" -o ./packages/spark-$(spark_version)-bin-hadoop3.tgz
+
 # clean the images
 .PHONY: clean
-clean: clean_$(target)
+clean: down clean_$(target)
 
 clean_hadoop:
-	docker image rm wechar/hadoop
-	docker image rm wechar/cluster-base
+	-docker image rm wechar/hadoop
+	-docker image rm wechar/cluster-base
 
 clean_mysql: clean_hadoop
-	docker image rm wechar/mysql
+	-docker image rm wechar/mysql
 
 clean_hive: clean_mysql
-	docker image rm wechar/hive
+	-docker image rm wechar/hive
+
+clean_spark: clean_hive
+	-docker image rm wechar/spark
 
 mkdir_volumes_hadoop:
 	rm -rf ./volumes/hadoop
@@ -69,6 +80,8 @@ mkdir_volumes_hadoop:
 mkdir_volumes_mysql: mkdir_volumes_hadoop
 
 mkdir_volumes_hive: mkdir_volumes_mysql
+
+mkdir_volumes_spark: mkdir_volumes_hive
 
 # run the docker cluster
 run: down build mkdir_volumes_$(target) generate_compose_yml_$(target)
@@ -86,3 +99,6 @@ generate_compose_yml_mysql: generate_compose_yml_hadoop
 
 generate_compose_yml_hive: generate_compose_yml_mysql
 	sed '1,/services:/ d' hive/docker-compose.yml >> docker-compose.yml
+
+generate_compose_yml_spark: generate_compose_yml_hive
+	sed '1,/services:/ d' spark/docker-compose.yml >> docker-compose.yml

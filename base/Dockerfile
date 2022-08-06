@@ -13,6 +13,8 @@ RUN apt-get -q update && apt-get -q install -y --no-install-recommends \
 RUN ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa \
     && cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
 # environment variables for all users
 RUN echo "source ~/.bash_profile" >> ~/.bashrc \
     && echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bash_profile

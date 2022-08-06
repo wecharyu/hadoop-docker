@@ -2,7 +2,7 @@ version: "3"
 
 services:
   hadoop100:
-    image: wechar/cluster
+    image: wechar/hadoop
     hostname: hadoop100
     container_name: hadoop100
     user: hadoop
@@ -19,7 +19,7 @@ services:
     tty: true
 
   hadoop101:
-    image: wechar/cluster
+    image: wechar/hadoop
     hostname: hadoop101
     container_name: hadoop101
     user: hadoop
@@ -35,7 +35,7 @@ services:
     tty: true
 
   hadoop102:
-    image: wechar/cluster
+    image: wechar/hadoop
     hostname: hadoop102
     container_name: hadoop102
     user: hadoop

@@ -17,6 +17,8 @@ ENV HIVE_HOME /usr/share/hive
 
 RUN ln -s /opt/apache-hive-${HIVE_VERSION}-bin $HIVE_HOME
 
+ENV HADOOP_CONF_DIR /etc/hadoop-client
+
 # copy the config files
 ADD hive/configs/hivemetastore-site.xml $HIVE_HOME/conf/hivemetastore-site.xml
 ADD hive/configs/hive-env.sh $HIVE_HOME/conf/hive-env.sh
