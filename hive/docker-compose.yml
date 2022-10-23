@@ -2,13 +2,13 @@ version: "3"
 
 services:
   hive:
-    image: wechar/cluster
+    image: wechar/hive
     hostname: hive
     container_name: hive
     user: hive
     restart: always
     ports:
-      - 3306:3306
+      - 9083:9083
     environment:
       - PREREQUISITE_SERVERS=mysql-3306:hadoop101-8088
     tty: true

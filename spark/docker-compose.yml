@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  spark:
+    image: wechar/spark
+    hostname: spark
+    container_name: spark
+    user: spark
+    restart: always
+    environment:
+      - PREREQUISITE_SERVERS=hadoop101-8088
+    tty: true

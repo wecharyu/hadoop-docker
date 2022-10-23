@@ -3,6 +3,7 @@
 Hadoop docker project is used to build and start up a big data cluster in some docker containers. It is a convenient tool to try and test the big data components. Currently the components we support includes:
 - [Apache Hadoop](https://hadoop.apache.org/)
 - [Apache Hive](https://hive.apache.org/)
+- [Apache Spark](https://spark.apache.org/)
 
 
 ## Overview
@@ -11,6 +12,11 @@ Hadoop docker project is used to build and start up a big data cluster in some d
 The big data components are optional while starting up the cluster.
 - For the hadoop component, there are 3 nodes whose hostnames are `hadoop100`, `hadoop101` and `hadoop102`.
 - For the hive component, there are one node whose hostname is `hive`, and hive component depends on the `mysql` node.
+- For the spark component, there is one node whose hostname is `spark` as the spark driver.
+
+The docker image depandency is as follows:
+
+![docker image depandency](docker-images.png)
 
 ## Prerequisite
 - docker, docker-compose

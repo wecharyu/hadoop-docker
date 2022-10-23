@@ -10,7 +10,7 @@ if [ $result -ne 0 ]; then
   $HADOOP_HOME/bin/hadoop fs -mkdir -p /user/hive/warehouse
   $HADOOP_HOME/bin/hadoop fs -chown -R hive /user/hive
   $HADOOP_HOME/bin/hadoop fs -chown -R hive:hdfs /user/hive/warehouse
-  $HADOOP_HOME/bin/hadoop fs -chmod g+w /user/hive/warehouse
+  $HADOOP_HOME/bin/hadoop fs -chmod 777 /user/hive/warehouse
 fi
 
 # init mysql schema if not created
