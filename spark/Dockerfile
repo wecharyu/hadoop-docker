@@ -8,14 +8,15 @@ RUN echo "spark ALL=NOPASSWD: ALL" > "/etc/sudoers.d/spark-docker"
 
 # install spark
 ARG SPARK_VERSION="3.3.0"
+ARG SPARK_BUILTIN_HADOOP_VERSION="hadoop3"
 
-COPY packages/spark-${SPARK_VERSION}-bin-hadoop3.tgz /tmp/spark-bin-hadoop.tgz
+COPY packages/spark-${SPARK_VERSION}-bin-${SPARK_BUILTIN_HADOOP_VERSION}.tgz /tmp/spark-bin-hadoop.tgz
 RUN tar -xvf /tmp/spark-bin-hadoop.tgz -C /opt/ \
     && rm /tmp/spark-bin-hadoop.tgz
 
 ENV SPARK_HOME /usr/share/spark
 
-RUN ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop3 $SPARK_HOME
+RUN ln -s /opt/spark-${SPARK_VERSION}-bin-${SPARK_BUILTIN_HADOOP_VERSION} $SPARK_HOME
 
 ENV HADOOP_CONF_DIR /etc/hadoop-client
 

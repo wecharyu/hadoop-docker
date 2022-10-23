@@ -4,11 +4,12 @@
 hadoop_version := 3.3.2
 hive_version := 3.1.2
 spark_version := 3.3.0
+spark_builtin_hadoop_version := hadoop3
 
 # common url
 hadoop_url := https://www.apache.org/dist/hadoop/common/hadoop-$(hadoop_version)/hadoop-$(hadoop_version).tar.gz
 hive_url := https://downloads.apache.org/hive/hive-$(hive_version)/apache-hive-$(hive_version)-bin.tar.gz
-spark_url := https://dlcdn.apache.org/spark/spark-$(spark_version)/spark-$(spark_version)-bin-hadoop3.tgz
+spark_url := https://dlcdn.apache.org/spark/spark-$(spark_version)/spark-$(spark_version)-bin-$(spark_builtin_hadoop_version).tgz
 
 uid := $(shell id -u)
 gid := $(uid)
@@ -37,7 +38,7 @@ build_hive_images: build_mysql_images download_hive_tarball
 	$(eval uid=$(shell echo $$(($(uid)+1))))
 
 build_spark_images: build_hive_images download_spark_tarball
-	docker build $(build_flag) --build-arg SPARK_VERSION=$(spark_version) -t wechar/spark -f ./spark/Dockerfile .
+	docker build $(build_flag) --build-arg SPARK_VERSION=$(spark_version) --build-arg SPARK_BUILTIN_HADOOP_VERSION=$(spark_builtin_hadoop_version) -t wechar/spark -f ./spark/Dockerfile .
 	$(eval uid=$(shell echo $$(($(uid)+1))))
 
 # download tarballs
@@ -51,7 +52,7 @@ download_hive_tarball:
 
 download_spark_tarball:
 	mkdir -p ./packages
-	test -f ./packages/spark-$(spark_version)-bin-hadoop3.tgz && echo "spark tarball already exists" || curl -SL "$(spark_url)" -o ./packages/spark-$(spark_version)-bin-hadoop3.tgz
+	test -f ./packages/spark-$(spark_version)-bin-$(spark_builtin_hadoop_version).tgz && echo "spark tarball already exists" || curl -SL "$(spark_url)" -o ./packages/spark-$(spark_version)-bin-$(spark_builtin_hadoop_version).tgz
 
 # clean the images
 .PHONY: clean
