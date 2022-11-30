@@ -35,8 +35,9 @@ RUN mkdir $HADOOP_HOME/logs \
 RUN echo "export HADOOP_HOME=/usr/share/hadoop" >> ~/.bash_profile \
     && echo "export PATH=\$HADOOP_HOME/bin:\$HADOOP_HOME/sbin:\$PATH" >> ~/.bash_profile
 
-# create the hadoop client conf
-RUN mkdir -p /etc/hadoop-client
+# create the hadoop client conf and set env
+RUN mkdir -p /etc/hadoop-client \
+    && echo "HADOOP_CONF_DIR=/etc/hadoop-client" >> /etc/environment
 ADD hadoop/configs/hadoop-client /etc/hadoop-client
 
 # add user and group

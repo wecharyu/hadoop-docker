@@ -3,7 +3,7 @@
 # basic configuration
 hadoop_version := 3.3.2
 hive_version := 3.1.2
-spark_version := 3.3.0
+spark_version := 3.3.1
 spark_builtin_hadoop_version := hadoop3
 
 # common url
