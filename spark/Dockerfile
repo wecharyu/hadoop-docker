@@ -21,7 +21,8 @@ RUN ln -s /opt/spark-${SPARK_VERSION}-bin-${SPARK_BUILTIN_HADOOP_VERSION} $SPARK
 ENV HADOOP_CONF_DIR /etc/hadoop-client
 
 # create spark conf dir
-RUN mkdir -p /etc/spark-conf \
+ENV SPARK_CONF_DIR /etc/spark-conf
+RUN mkdir -p $SPARK_CONF_DIR \
     && echo "SPARK_CONF_DIR=/etc/spark-conf" >> /etc/environment
 ADD spark/configs/spark-conf $SPARK_CONF_DIR
 
