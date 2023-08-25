@@ -9,7 +9,7 @@ spark_builtin_hadoop_version := hadoop3
 # common url
 hadoop_url := https://www.apache.org/dist/hadoop/common/hadoop-$(hadoop_version)/hadoop-$(hadoop_version).tar.gz
 hive_url := https://downloads.apache.org/hive/hive-$(hive_version)/apache-hive-$(hive_version)-bin.tar.gz
-spark_url := https://dlcdn.apache.org/spark/spark-$(spark_version)/spark-$(spark_version)-bin-$(spark_builtin_hadoop_version).tgz
+spark_url := https://archive.apache.org/dist/spark/spark-$(spark_version)/spark-$(spark_version)-bin-$(spark_builtin_hadoop_version).tgz
 
 uid := $(shell id -u)
 gid := $(uid)
