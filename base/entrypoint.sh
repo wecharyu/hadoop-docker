@@ -24,7 +24,9 @@ function check_service()
     sleep $retry_seconds
     let "cur_try++"
 
-    curl -s $server > /dev/null
+    host=$(echo "$server" | sed 's/:.*//')
+    ip=$(echo "$server" | sed 's/.*://')
+    nc -z $host $ip
     result=$?
   done
   echo "[$cur_try/$max_try] $server is available."
