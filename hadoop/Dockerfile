@@ -16,10 +16,6 @@ ENV HADOOP_HOME /usr/share/hadoop
 
 RUN ln -s /opt/hadoop-$HADOOP_VERSION $HADOOP_HOME
 
-# config environment shell files
-RUN sed -i '/export JAVA_HOME/ s#.*#export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64#' $HADOOP_HOME/etc/hadoop/hadoop-env.sh
-# RUN sed -i '$a export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' $HADOOP_HOME/etc/hadoop/yarn-env.sh
-
 # copy the config files
 ADD hadoop/configs/core-site.xml $HADOOP_HOME/etc/hadoop/core-site.xml
 ADD hadoop/configs/hdfs-site.xml $HADOOP_HOME/etc/hadoop/hdfs-site.xml
