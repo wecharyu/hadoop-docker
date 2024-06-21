@@ -1,9 +1,9 @@
 # Makefile for hadoop docler build
 
 # basic configuration
-hadoop_version := 3.3.2
-hive_version := 3.1.2
-spark_version := 3.3.1
+hadoop_version := 3.3.5
+hive_version := 4.0.0
+spark_version := 4.0.0-preview1
 spark_builtin_hadoop_version := hadoop3
 
 # common url
@@ -11,7 +11,7 @@ hadoop_url := https://www.apache.org/dist/hadoop/common/hadoop-$(hadoop_version)
 hive_url := https://downloads.apache.org/hive/hive-$(hive_version)/apache-hive-$(hive_version)-bin.tar.gz
 spark_url := https://archive.apache.org/dist/spark/spark-$(spark_version)/spark-$(spark_version)-bin-$(spark_builtin_hadoop_version).tgz
 
-uid := $(shell id -u)
+uid := $(shell echo 500)
 gid := $(uid)
 
 build_flag = --build-arg UID=$(uid) --build-arg GID=$(gid)
@@ -71,21 +71,8 @@ clean_hive: clean_mysql
 clean_spark: clean_hive
 	-docker image rm wechar/spark
 
-mkdir_volumes_hadoop:
-	rm -rf ./volumes/hadoop
-	$(foreach worker, $(workers), \
-		mkdir -p ./volumes/hadoop/data/$(worker); \
-		mkdir -p ./volumes/hadoop/logs/$(worker); \
-	)
-
-mkdir_volumes_mysql: mkdir_volumes_hadoop
-
-mkdir_volumes_hive: mkdir_volumes_mysql
-
-mkdir_volumes_spark: mkdir_volumes_hive
-
 # run the docker cluster
-run: down build mkdir_volumes_$(target) generate_compose_yml_$(target)
+run: down build generate_compose_yml_$(target)
 	docker-compose up
 
 down:

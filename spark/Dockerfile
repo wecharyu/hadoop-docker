@@ -28,7 +28,8 @@ ADD spark/configs/spark-conf $SPARK_CONF_DIR
 
 # environment variables for all users
 RUN echo "export SPARK_HOME=/usr/share/spark" >> ~/.bash_profile \
-    && echo "export PATH=\$SPARK_HOME/bin:\$PATH" >> ~/.bash_profile
+    && echo "export PATH=\$SPARK_HOME/bin:\$PATH" >> ~/.bash_profile \
+    && echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/.bash_profile
 
 # add user and group
 ARG UID=1000

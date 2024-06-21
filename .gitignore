@@ -1,5 +1,4 @@
 .vscode
-volumes
 /docker-compose.yml
 packages/*
 !packages/.gitkeep
