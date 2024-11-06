@@ -37,7 +37,7 @@ The `target` option is used to specify the component your cluster want, whose de
 ### 2. startup cluster
 - use the Makefile script:
 ```
-make run target=hadoop
+make run target=hadoop [docker_cmd=docker|podman]
 ```
 - restart existed containers
 ```

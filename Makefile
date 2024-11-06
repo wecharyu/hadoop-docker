@@ -2,9 +2,11 @@
 
 # basic configuration
 hadoop_version := 3.3.5
-hive_version := 4.0.0
+hive_version := 4.0.1
 spark_version := 4.0.0-preview1
 spark_builtin_hadoop_version := hadoop3
+docker_cmd := docker
+docker_compose_cmd := $(docker_cmd)-compose
 
 # common url
 hadoop_url := https://www.apache.org/dist/hadoop/common/hadoop-$(hadoop_version)/hadoop-$(hadoop_version).tar.gz
@@ -22,23 +24,23 @@ target ?= hadoop
 build: build_network build_$(target)_images
 
 build_network:
-	-docker network create hadoop-docker-bridge
+	-$(docker_cmd) network create hadoop-docker-bridge
 
 # build images for different targets
 build_hadoop_images: download_hadoop_tarball
-	docker build $(build_flag) -t wechar/cluster-base ./base
-	docker build $(build_flag) --build-arg HADOOP_VERSION=$(hadoop_version) -t wechar/hadoop -f ./hadoop/Dockerfile .
+	$(docker_cmd) build $(build_flag) -t wechar/cluster-base ./base
+	$(docker_cmd) build $(build_flag) --build-arg HADOOP_VERSION=$(hadoop_version) -t wechar/hadoop -f ./hadoop/Dockerfile .
 	$(eval uid=$(shell echo $$(($(uid)+1))))
 
 build_mysql_images: build_hadoop_images
-	docker build $(build_flag) -t wechar/mysql ./mysql
+	$(docker_cmd) build $(build_flag) -t wechar/mysql ./mysql
 
 build_hive_images: build_mysql_images download_hive_tarball
-	docker build $(build_flag) --build-arg HIVE_VERSION=$(hive_version) -t wechar/hive -f ./hive/Dockerfile .
+	$(docker_cmd) build $(build_flag) --build-arg HIVE_VERSION=$(hive_version) -t wechar/hive -f ./hive/Dockerfile .
 	$(eval uid=$(shell echo $$(($(uid)+1))))
 
 build_spark_images: build_hive_images download_spark_tarball
-	docker build $(build_flag) --build-arg SPARK_VERSION=$(spark_version) --build-arg SPARK_BUILTIN_HADOOP_VERSION=$(spark_builtin_hadoop_version) -t wechar/spark -f ./spark/Dockerfile .
+	$(docker_cmd) build $(build_flag) --build-arg SPARK_VERSION=$(spark_version) --build-arg SPARK_BUILTIN_HADOOP_VERSION=$(spark_builtin_hadoop_version) -t wechar/spark -f ./spark/Dockerfile .
 	$(eval uid=$(shell echo $$(($(uid)+1))))
 
 # download tarballs
@@ -59,24 +61,24 @@ download_spark_tarball:
 clean: down clean_$(target)
 
 clean_hadoop:
-	-docker image rm wechar/hadoop
-	-docker image rm wechar/cluster-base
+	-$(docker_cmd) image rm wechar/hadoop
+	-$(docker_cmd) image rm wechar/cluster-base
 
 clean_mysql: clean_hadoop
-	-docker image rm wechar/mysql
+	-$(docker_cmd) image rm wechar/mysql
 
 clean_hive: clean_mysql
-	-docker image rm wechar/hive
+	-$(docker_cmd) image rm wechar/hive
 
 clean_spark: clean_hive
-	-docker image rm wechar/spark
+	-$(docker_cmd) image rm wechar/spark
 
 # run the docker cluster
 run: down build generate_compose_yml_$(target)
-	docker-compose up
+	$(docker_compose_cmd) up
 
 down:
-	-docker-compose down
+	-$(docker_compose_cmd) down
 
 generate_compose_yml_hadoop:
 	cp -rf docker-compose-head.yml docker-compose.yml
